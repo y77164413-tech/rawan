@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>إلى حبيبتي روان ❤️</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: 'Cairo', sans-serif;
+            touch-action: manipulation;
+        }
+        .handwriting { font-family: 'Amiri', serif; }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.6; }
+            80% { opacity: 0.6; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        .animate-float { animation: float linear infinite; }
+
+        .envelope-wrapper { perspective: 1500px; }
+
+        .envelope {
+            position: relative;
+            width: 280px;
+            height: 180px;
+            background: #ef4444;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+        }
+
+        .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #dc2626;
+            clip-path: polygon(0 0, 50% 50%, 100% 0);
+            z-index: 30;
+            transition: transform 0.6s ease-in-out, opacity 0.4s ease;
+            transform-origin: top;
+        }
+        .flap.open {
+            transform: rotateX(180deg);
+            z-index: 5;
+            opacity: 0;
+        }
+
+        .envelope-front {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #f87171;
+            clip-path: polygon(0 0, 0 100%, 100% 100%, 100% 0, 50% 50%);
+            z-index: 25;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .fade-in {
+            animation: fadeIn 1.5s forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-pink-100">
+    <!-- Background music: Soft romantic piano -->
+    <audio id="romantic-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
+    </audio>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const HeartIcon = ({ size = 24, className = "" }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                <path d="M19 14l-7 8-7-8"/><path d="M12 3c-4.5 0-7 3-7 7s2.5 7 7 7 7-3 7-7-2.5-7-7-7z" fill="currentColor"/>
+            </svg>
+        );
+
+        const LoveLetter = () => {
+            const [view, setView] = useState('envelope');
+            const [isOpening, setIsOpening] = useState(false);
+            const [hearts, setHearts] = useState([]);
+
+            useEffect(() => {
+                setHearts(Array.from({ length: 40 }).map((_, i) => ({
+                    id: i,
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                    delay: `${Math.random() * 5}s`,
+                    duration: `${5 + Math.random() * 10}s`,
+                    size: `${Math.random() * 20 + 10}px`
+                })));
+            }, []);
+
+            const handleOpen = () => {
+                setIsOpening(true);
+                const music = document.getElementById('romantic-music');
+                if (music) {
+                    music.play().catch(e => console.log("Audio play failed", e));
+                }
+                setTimeout(() => {
+                    setView('message');
+                }, 800);
+            };
+
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-pink-200 via-red-100 to-pink-300 flex items-center justify-center overflow-hidden relative" dir="rtl">
+
+                    {hearts.map((heart) => (
+                        <div key={heart.id} className="absolute text-pink-400 animate-float opacity-40" style={{ left: heart.left, top: heart.top, animationDelay: heart.delay, animationDuration: heart.duration, fontSize: heart.size }}>
+                            <HeartIcon size={24} className="fill-current" />
+                        </div>
+                    ))}
+
+                    {view === 'envelope' ? (
+                        <div className="relative z-10 flex flex-col items-center w-full px-4">
+                            {!isOpening && (
+                                <div className="mb-12 text-center animate-bounce text-red-600 font-bold text-xl md:text-2xl">
+                                    <p className="flex items-center justify-center gap-3 bg-white/60 px-6 py-3 rounded-full backdrop-blur-sm shadow-lg inline-flex">
+                                        اكبسي ع الرسالة يا روان يا عمري <HeartIcon size={24} className="text-red-500 fill-red-500" />
+                                    </p>
+                                </div>
+                            )}
+
+                            <div className="envelope-wrapper" onClick={handleOpen}>
+                                <div className="envelope">
+                                    <div className={`flap ${isOpening ? 'open' : ''}`}></div>
+                                    <div className="envelope-front"></div>
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="relative z-20 flex items-center justify-center w-full px-4 fade-in">
+                            <div className="bg-white/90 backdrop-blur-md p-8 md:p-12 rounded-3xl shadow-2xl border-4 border-double border-pink-300 max-w-lg w-full text-center space-y-6 relative">
+                                <div className="flex justify-center mb-6">
+                                    <div className="relative">
+                                        <HeartIcon size={60} className="text-red-500 fill-red-500 animate-pulse" />
+                                        <div className="absolute inset-0 animate-ping opacity-25 text-red-500 fill-red-500">
+                                            <HeartIcon size={60} />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h2 className="text-red-600 font-bold text-3xl md:text-4xl mb-6 handwriting">حبيبتي روان الغالية..</h2>
+
+                                <p className="text-gray-700 leading-relaxed text-xl md:text-2xl handwriting font-medium">
+                                    ما بدي تضلي زعلانة، لأنو قلبي ما بيتحمل يشوفك حزينة.
+                                    بدي دايماً تكوني مبسوطة والضحكة ما تفارق وجهك،
+                                    وما بدي أي حدا بالدنيا يزعلِك..
+                                </p>
+
+                                <div className="py-8">
+                                    <p className="text-red-500 font-bold text-2xl md:text-3xl handwriting italic">
+                                        روان.. إنتي كل دنيتي وأغلى شي عندي ❤️
+                                    </p>
+                                </div>
+
+                                <div className="flex justify-center gap-4 pt-4">
+                                    <span className="text-yellow-500 text-3xl">✨</span>
+                                    <span className="text-red-500 text-3xl">💖</span>
+                                    <span className="text-yellow-500 text-3xl">✨</span>
+                                </div>
+
+                                <button
+                                    onClick={() => {
+                                        setView('envelope');
+                                        setIsOpening(false);
+                                        const music = document.getElementById('romantic-music');
+                                        if (music) music.pause();
+                                    }}
+                                    className="mt-8 text-pink-400 hover:text-pink-600 transition-colors text-sm underline"
+                                >
+                                    إغلاق الرسالة
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<LoveLetter />);
+    </script>
+</body>
+</html>
